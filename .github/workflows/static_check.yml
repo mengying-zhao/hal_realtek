@@ -47,9 +47,5 @@ jobs:
           done
           astyle --version
           echo "${ALL_CHANGED_FILES}"
-          ls -l
-          cd script/ci
-          ls -l
-          cd ../..
-          python3 -u scripts/ci/static_check.py
+          python3 -u ./scripts/ci/static_check.py
 
