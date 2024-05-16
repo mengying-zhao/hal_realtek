@@ -1,0 +1,51 @@
+name: Static Check
+
+on: [pull_request]
+
+env:
+  CPPCHECK_PATH: ${{ github.workspace }}/cppcheck/build/bin/cppcheck
+
+jobs:
+    check:
+      runs-on: ubuntu-22.04
+      name: Run static check on patch series (PR)
+      steps:
+      - name: Checkout the code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.11
+      
+      - name: Get Changed Files
+        id: changed-files
+        uses: tj-actions/changed-files@v44
+
+      - name: Build Cppcheck
+        run: |
+          git clone https://github.com/danmar/cppcheck.git
+          cd cppcheck
+          git checkout 2.9
+          mkdir build
+          cd build
+          cmake ..
+          cmake --build .
+          ./bin/cppcheck --version
+
+      - name: Install astyle using apt-get
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y astyle
+
+      - name: Static Check
+        env:
+          ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
+        run: |
+          for file in ${ALL_CHANGED_FILES}; do
+            echo "$file was changed"
+          done
+          astyle --version
+          echo "${ALL_CHANGED_FILES}"
+          python3 -u ./scripts/ci/static_check.py
+
