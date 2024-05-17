@@ -40,12 +40,12 @@ void ADC_PowerOff(void)
 {
     /*Power off control flow!*/
 
-     AUXADC_AON_REG0X1B94->pow = 0x0;
-AUXADC_AON_REG0X1B94->pow_ref = 0x0;
+    AUXADC_AON_REG0X1B94->pow = 0x0;
+    AUXADC_AON_REG0X1B94->pow_ref = 0x0;
     AUXADC_AON_REG0X1B90->anapar_pow_ad_2 = 0x0;
     AUXADC_AON_REG0X1B90->anapar_pow_ad_1 = 0x0;
     AUXADC_AON_REG0X1B90->hw_pd = 0x1;
-    }
+}
 
 void ADC_DelayConfig(ADC_InitTypeDef *ADC_InitStruct)
 {
