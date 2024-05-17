@@ -8,18 +8,20 @@ import sys
 import xml.dom.minidom
 import subprocess
 import os
+import git
 import copy
 from pathlib import Path
 
 cppcheck = os.environ.get("CPPCHECK_PATH") or r'./cppcheck/build/bin/cppcheck'
 
 class CICheck():
-    def __init__(self):
-        pass
+    def __init__(self, subgit_repo_path, **kwargs):
+        self.subgit_repo_path = subgit_repo_path
+        self.subgit_repo = git.Repo(path=subgit_repo_path)
 
     def do_commit_check(self):
-        subgit_repo.git.clean('-dfx')
-        check_commit_message_res, check_commit_message_msg = self.check_commit_message(subgit_repo)
+        self.subgit_repo.git.clean('-dfx')
+        check_commit_message_res, check_commit_message_msg = self.check_commit_message(self.subgit_repo)
         if not check_commit_message_res:
             return check_commit_message_res, r'[Commit Check Error]' + " " + check_commit_message_msg
 
@@ -225,13 +227,13 @@ class CICheck():
 
 
 if __name__ == "__main__":
-    global ZEPHYR_BASE
-    subgit_repo = os.environ.get('REPO_BASE')
-    if not subgit_repo:
-        subgit_repo = str(Path(__file__).resolve().parents[2])
-        os.environ['REPO_BASE'] = subgit_repo
+    global REPO_BASE
+    REPO_BASE = os.environ.get('REPO_BASE')
+    if not REPO_BASE:
+        REPO_BASE = str(Path(__file__).resolve().parents[2])
+        os.environ['REPO_BASE'] = REPO_BASE
     change_files = os.environ.get("ALL_CHANGED_FILES", "").split(" ")
-    ci_check = CICheck()
+    ci_check = CICheck(subgit_repo_path=REPO_BASE)
     #1.0 Check commit message
     commit_check_res, commit_check_message = ci_check.do_commit_check()
     #commit_check_res, commit_check_message = True, ""
