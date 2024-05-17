@@ -24,12 +24,8 @@ jobs:
 
       - name: Download Astyle
         uses: carlosperate/download-file-action@v2
-        id: download-astyle
         with:
           file-url: 'https://sourceforge.net/projects/astyle/files/astyle/astyle%203.0/astyle_3.0_linux.tar.gz'
-
-      - name: Print the file path (astyle.tar.gz)
-        run: echo "The file was downloaded to ${{ steps.download-astyle.outputs.file-path }}"
 
       - name: Build Astyle
         run: |
@@ -37,7 +33,6 @@ jobs:
           cd astyle/build/gcc
           sudo make
           sudo make install
-          astyle -h
           astyle --version
       
       - name: Build Cppcheck
@@ -58,7 +53,5 @@ jobs:
           for file in ${ALL_CHANGED_FILES}; do
             echo "$file was changed"
           done
-          astyle --version
           echo "${ALL_CHANGED_FILES}"
           python3 -u ./scripts/ci/static_check.py
-
