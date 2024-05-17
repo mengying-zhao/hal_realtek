@@ -22,6 +22,26 @@ jobs:
         id: changed-files
         uses: tj-actions/changed-files@v44
 
+      - name: Download Astyle
+        uses: carlosperate/download-file-action@v2
+        id: download-astyle
+        with:
+          file-url: 'https://sourceforge.net/projects/astyle/files/astyle/astyle%203.0/astyle_3.0_linux.tar.gz/download'
+          location: './astyle'
+
+      - name: Print the file path (astyle.tar.gz)
+        run: echo "The file was downloaded to ${{ steps.download-astyle.outputs.file-path }}"
+
+      - name: Build Astyle
+        run: |
+          ls -l
+          cd astyle
+          mkdir  as-gcc-exe
+          cd as-gcc-exe
+          cmake  ../
+          make
+          ./bin/astyle --version
+      
       - name: Build Cppcheck
         run: |
           git clone https://github.com/danmar/cppcheck.git
@@ -32,11 +52,6 @@ jobs:
           cmake ..
           cmake --build .
           ./bin/cppcheck --version
-
-      - name: Install astyle using apt-get
-        run: |
-          sudo apt-get update -y
-          sudo apt-get install -y astyle
 
       - name: Static Check
         env:
