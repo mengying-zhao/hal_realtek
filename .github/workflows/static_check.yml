@@ -38,11 +38,11 @@ jobs:
           cd astyle
           ls -l
           tar -zxvf astyle_3.0_linux.tar.gz
-          mkdir  as-gcc-exe
-          cd as-gcc-exe
-          cmake  ../
+          cd build/gcc
           make
-          ./bin/astyle --version
+          make install
+          astyle -h
+          astyle --version
       
       - name: Build Cppcheck
         run: |
