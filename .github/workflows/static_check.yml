@@ -34,11 +34,9 @@ jobs:
       - name: Build Astyle
         run: |
           tar -zxvf astyle_3.0_linux.tar.gz
-          ls -l
           cd astyle/build/gcc
-          chmod -R a+x /usr/bin
-          make
-          make install
+          sudo make
+          sudo make install
           astyle -h
           astyle --version
       
