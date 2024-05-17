@@ -27,19 +27,16 @@ jobs:
         id: download-astyle
         with:
           file-url: 'https://sourceforge.net/projects/astyle/files/astyle/astyle%203.0/astyle_3.0_linux.tar.gz'
-          location: './astyle'
 
       - name: Print the file path (astyle.tar.gz)
         run: echo "The file was downloaded to ${{ steps.download-astyle.outputs.file-path }}"
 
       - name: Build Astyle
         run: |
-          ls -l
-          cd astyle
-          ls -l
           tar -zxvf astyle_3.0_linux.tar.gz
           ls -l
           cd astyle/build/gcc
+          chmod -R a+x /usr/bin
           make
           make install
           astyle -h
