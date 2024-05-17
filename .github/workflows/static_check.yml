@@ -38,7 +38,8 @@ jobs:
           cd astyle
           ls -l
           tar -zxvf astyle_3.0_linux.tar.gz
-          cd build/gcc
+          ls -l
+          cd astyle/build/gcc
           make
           make install
           astyle -h
