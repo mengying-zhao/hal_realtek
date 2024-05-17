@@ -21,6 +21,7 @@ jobs:
       - name: Install Python dependencies
         run: |
           sudo pip3 install -U GitPython
+          pip show GitPython
 
       - name: Get Changed Files
         id: changed-files
@@ -50,10 +51,12 @@ jobs:
           cmake --build .
           ./bin/cppcheck --version
 
-      - name: Static Check
+      - name: Run Static Check
         env:
           ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
+          BASE_REF: ${{ github.base_ref }}
         run: |
           export REPO_BASE=$PWD
           echo "${ALL_CHANGED_FILES}"
+          echo "----- ${BASE_REF}"
           python3 -u ./scripts/ci/static_check.py
