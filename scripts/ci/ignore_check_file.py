@@ -6,4 +6,6 @@
 
 ignore_file_encoding = [] #r"sdk/src/mcu/peripheral/usb",
 
-ignore_file_cpp_astyle_check = []
+ignore_file_cpp_astyle_check = [
+    r'bee/drivers/adc/src/rtl87x2g/rtl87x2g_adc.c'
+]
