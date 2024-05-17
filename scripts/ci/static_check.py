@@ -49,10 +49,10 @@ class CICheck():
 
     def check_commit_message(self, repo):
         # Commit string is capsulated in '', strip it
-        commit_title = git('log', '-1', 'HEAD', "--pretty='%s'").strip('\'')
-        commit_body = git('log', '-1', 'HEAD', "--pretty='%b'").strip('\'')
-        commit_message = git('log', '-1', 'HEAD', "--pretty='%B'").strip('\'')
-        commit_id = git('log', '-1', 'HEAD', "--pretty='%H'").strip("'")
+        commit_title = git('log', '-1', 'HEAD', "--pretty='%s'", cwd=repo).strip('\'')
+        commit_body = git('log', '-1', 'HEAD', "--pretty='%b'", cwd=repo).strip('\'')
+        commit_message = git('log', '-1', 'HEAD', "--pretty='%B'", cwd=repo).strip('\'')
+        commit_id = git('log', '-1', 'HEAD', "--pretty='%H'", cwd=repo).strip("'")
         print(r'{}: {}'.format(commit_id, commit_title))
         print("commit_title:",commit_title)
         print("commit_body:",commit_body)
