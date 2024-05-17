@@ -20,7 +20,7 @@ jobs:
 
       - name: Install Python dependencies
         run: |
-          sudo python -m pip install -U GitPython
+          pip install GitPython
           pip show GitPython
 
       - name: Get Changed Files
