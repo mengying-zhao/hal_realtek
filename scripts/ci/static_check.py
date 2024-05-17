@@ -8,20 +8,40 @@ import sys
 import xml.dom.minidom
 import subprocess
 import os
-import git
 import copy
 from pathlib import Path
 
 cppcheck = os.environ.get("CPPCHECK_PATH") or r'./cppcheck/build/bin/cppcheck'
 
+
+def git(*args, cwd=None, ignore_non_zero=False):
+    # Helper for running a Git command. Returns the rstrip()ed stdout output.
+    # Called like git("diff"). Exits with SystemError (raised by sys.exit()) on
+    # errors if 'ignore_non_zero' is set to False (default: False). 'cwd' is the
+    # working directory to use (default: current directory).
+
+    git_cmd = ("git",) + args
+    try:
+        cp = subprocess.run(git_cmd, capture_output=True, cwd=cwd)
+    except OSError as e:
+        print(f"failed to run '{git_cmd}': {e}")
+
+    if not ignore_non_zero and (cp.returncode or cp.stderr):
+        print(f"'{git_cmd}' exited with status {cp.returncode} and/or "
+            f"wrote to stderr.\n"
+            f"==stdout==\n"
+            f"{cp.stdout.decode('utf-8')}\n"
+            f"==stderr==\n"
+            f"{cp.stderr.decode('utf-8')}\n")
+
+    return cp.stdout.decode("utf-8").rstrip()
+
 class CICheck():
     def __init__(self, subgit_repo_path, **kwargs):
         self.subgit_repo_path = subgit_repo_path
-        self.subgit_repo = git.Repo(path=subgit_repo_path)
 
     def do_commit_check(self):
-        self.subgit_repo.git.clean('-dfx')
-        check_commit_message_res, check_commit_message_msg = self.check_commit_message(self.subgit_repo)
+        check_commit_message_res, check_commit_message_msg = self.check_commit_message(self.subgit_repo_path)
         if not check_commit_message_res:
             return check_commit_message_res, r'[Commit Check Error]' + " " + check_commit_message_msg
 
@@ -29,10 +49,10 @@ class CICheck():
 
     def check_commit_message(self, repo):
         # Commit string is capsulated in '', strip it
-        commit_title = repo.git.log('-1', 'HEAD', "--pretty='%s'").strip('\'')
-        commit_body = repo.git.log('-1', 'HEAD', "--pretty='%b'").strip('\'')
-        commit_message = repo.git.log('-1', 'HEAD', "--pretty='%B'").strip('\'')
-        commit_id = repo.git.log('-1', 'HEAD', "--pretty='%H'").strip("'")
+        commit_title = git('log', '-1', 'HEAD', "--pretty='%s'").strip('\'')
+        commit_body = git('log', '-1', 'HEAD', "--pretty='%b'").strip('\'')
+        commit_message = git('log', '-1', 'HEAD', "--pretty='%B'").strip('\'')
+        commit_id = git('log', '-1', 'HEAD', "--pretty='%H'").strip("'")
         print(r'{}: {}'.format(commit_id, commit_title))
 
         # Check rule1: Separate subject from body with a blank line
