@@ -18,6 +18,10 @@ jobs:
         with:
           python-version: 3.11
 
+      - name: Install Python dependencies
+        run: |
+          sudo pip3 install -U GitPython
+
       - name: Get Changed Files
         id: changed-files
         uses: tj-actions/changed-files@v44
