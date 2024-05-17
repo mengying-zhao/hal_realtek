@@ -26,7 +26,7 @@ jobs:
         uses: carlosperate/download-file-action@v2
         id: download-astyle
         with:
-          file-url: 'https://sourceforge.net/projects/astyle/files/astyle/astyle%203.0/astyle_3.0_linux.tar.gz/download'
+          file-url: 'https://sourceforge.net/projects/astyle/files/astyle/astyle%203.0/astyle_3.0_linux.tar.gz'
           location: './astyle'
 
       - name: Print the file path (astyle.tar.gz)
@@ -36,6 +36,8 @@ jobs:
         run: |
           ls -l
           cd astyle
+          ls -l
+          tar -zxvf astyle_3.0_linux.tar.gz
           mkdir  as-gcc-exe
           cd as-gcc-exe
           cmake  ../
