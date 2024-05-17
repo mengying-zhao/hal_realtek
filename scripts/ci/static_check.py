@@ -9,6 +9,7 @@ import xml.dom.minidom
 import subprocess
 import os
 import copy
+from pathlib import Path
 
 cppcheck = os.environ.get("CPPCHECK_PATH") or r'./cppcheck/build/bin/cppcheck'
 
@@ -16,6 +17,44 @@ class CICheck():
     def __init__(self):
         pass
 
+    def do_commit_check(self):
+        subgit_repo.git.clean('-dfx')
+        check_commit_message_res, check_commit_message_msg = self.check_commit_message(subgit_repo)
+        if not check_commit_message_res:
+            return check_commit_message_res, r'[Commit Check Error]' + " " + check_commit_message_msg
+
+        return check_commit_message_res, check_commit_message_msg
+
+    def check_commit_message(self, repo):
+        # Commit string is capsulated in '', strip it
+        commit_title = repo.git.log('-1', 'HEAD', "--pretty='%s'").strip('\'')
+        commit_body = repo.git.log('-1', 'HEAD', "--pretty='%b'").strip('\'')
+        commit_message = repo.git.log('-1', 'HEAD', "--pretty='%B'").strip('\'')
+        commit_id = repo.git.log('-1', 'HEAD', "--pretty='%H'").strip("'")
+        print(r'{}: {}'.format(commit_id, commit_title))
+
+        # Check rule1: Separate subject from body with a blank line
+        if commit_title != commit_message.split('\n', maxsplit=1)[0]:
+            return False, 'no blank line between title and body'
+        
+        # Check rule2: Limit the subject line to 72 characters
+        if len(commit_title) > 72 or len(commit_title) == 0:
+            return False, 'invalid subject line len {} exceeds max 72 characters'.format(len(commit_title))
+
+        # Check rule3: Capitalize first word of the subject line
+        if commit_title.lstrip(' ')[0].islower():
+            return False, 'first word \'{}\' of subject line not capitalized'.format(commit_title.split(maxsplit=1)[0])
+
+        # Check rule4: Do not end the subject line with a period
+        if commit_title.endswith('.'):
+            return False, 'subject line should not end with a period'
+
+        # Check rule5: Use the imperative mood in the subject line (!!!not checked)
+
+        # Check rule6: Wrap the body at 72 characters
+        for l in commit_body.split('\n'):
+            if len(l) > 72:
+                return False, 'body line \'{}\' len {} not wrapped at 72 characters'.format(l, len(l))
 
     def check_file_encodeing(self, changed_file_list, file_dir=None):
         for f in changed_file_list:
@@ -186,8 +225,22 @@ class CICheck():
 
 
 if __name__ == "__main__":
+    global ZEPHYR_BASE
+    subgit_repo = os.environ.get('REPO_BASE')
+    if not subgit_repo:
+        subgit_repo = str(Path(__file__).resolve().parents[2])
+        os.environ['REPO_BASE'] = subgit_repo
     change_files = os.environ.get("ALL_CHANGED_FILES", "").split(" ")
     ci_check = CICheck()
+    #1.0 Check commit message
+    commit_check_res, commit_check_message = ci_check.do_commit_check()
+    #commit_check_res, commit_check_message = True, ""
+    if commit_check_res:
+        print("check commit message pass")
+    else:
+        print(commit_check_message)
+        sys.exit('check commit message failed')
+    #2.0 check_commit_files
     check_commit_files_result, check_commit_files_message = ci_check.check_commit_files()
     if not check_commit_files_result:
         file_check_message = "[Static Check Error] " + check_commit_files_message
