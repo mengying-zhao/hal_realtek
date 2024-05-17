@@ -54,6 +54,9 @@ class CICheck():
         commit_message = git('log', '-1', 'HEAD', "--pretty='%B'").strip('\'')
         commit_id = git('log', '-1', 'HEAD', "--pretty='%H'").strip("'")
         print(r'{}: {}'.format(commit_id, commit_title))
+        print("commit_title:",commit_title)
+        print("commit_body:",commit_body)
+        print("commit_message:",commit_message)
 
         # Check rule1: Separate subject from body with a blank line
         if commit_title != commit_message.split('\n', maxsplit=1)[0]:

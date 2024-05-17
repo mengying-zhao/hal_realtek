@@ -55,10 +55,6 @@ jobs:
           ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
         run: |
           export REPO_BASE=$PWD
-          ls -la
-          git log  --pretty=oneline | head -n 10
-          for file in ${ALL_CHANGED_FILES}; do
-            echo "$file was changed"
           done
           echo "${ALL_CHANGED_FILES}"
           python3 -u ./scripts/ci/static_check.py
