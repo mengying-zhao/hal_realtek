@@ -55,8 +55,8 @@ extern "C" {
  *============================================================================*/
 typedef struct
 {
-    __I  uint32_t ADC_FIFO_READ;              /*!< 0x00 */
-    __IO uint32_t ADC_DIG_CTRL;               /*!< 0x04 */
+        __I  uint32_t ADC_FIFO_READ;              /*!< 0x00 */
+__IO uint32_t ADC_DIG_CTRL;               /*!< 0x04 */
     __IO uint32_t ADC_SCHED_CTRL;             /*!< 0x08 */
     __IO uint32_t ADC_CTRL_INT;               /*!< 0x0C */
     __IO uint16_t ADC_SCHTAB0;                /*!< 0x10 */
@@ -96,7 +96,7 @@ typedef struct
     __IO uint32_t RSVD1;                      /*!< 0x58 */
     __IO uint32_t ADC_TIME_PERIOD;            /*!< 0x5C */
     __IO uint32_t RSVD2;                      /*!< 0x60 */
-} ADC_TypeDef;
+    } ADC_TypeDef;
 
 /*============================================================================*
  *                         ADC Declaration
