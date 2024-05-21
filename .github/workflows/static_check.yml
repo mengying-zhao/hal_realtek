@@ -58,11 +58,9 @@ jobs:
         env:
           ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
           BASE_REF: ${{ github.base_ref }}
-          COMMIT_MSG: ${{ github.event.pull_request.commits }}
         run: |
           export REPO_BASE=$PWD
           echo "${ALL_CHANGED_FILES}"
-          echo "${COMMIT_MSG}"
           echo "========================="
           git log -1 HEAD --pretty='%s'
           echo "========================="
