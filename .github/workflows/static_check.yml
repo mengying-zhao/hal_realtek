@@ -61,13 +61,4 @@ jobs:
         run: |
           export REPO_BASE=$PWD
           echo "${ALL_CHANGED_FILES}"
-          echo "========================="
-          git log -1 HEAD --pretty='%s'
-          echo "========================="
-          git log -1 HEAD --pretty='%b'
-          echo "========================="
-          git log -1 HEAD --pretty='%B'
-          echo "========================="
-          git log -1 HEAD --pretty='%H'
-          echo "=========================="
           python3 -u ./scripts/ci/static_check.py
