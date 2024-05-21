@@ -26,6 +26,18 @@ jobs:
       - name: Get Changed Files
         id: changed-files
         uses: tj-actions/changed-files@v44
+      
+      - name: west setup
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          git remote -v
+          # Ensure there's no merge commits in the PR
+          [[ "$(git rev-list --merges --count origin/${BASE_REF}..)" == "0" ]] || \
+          (echo "::error ::Merge commits not allowed, rebase instead";false)
+          git rebase origin/${BASE_REF}
+          # debug
+          git log  --pretty=oneline | head -n 10
 
       #- name: Download Astyle
       #  uses: carlosperate/download-file-action@v2
@@ -55,10 +67,9 @@ jobs:
         env:
           ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
           BASE_REF: ${{ github.base_ref }}
-          COMMIT_MSG: ${{ github.event.pull_request.head_commit.message }}
+          COMMIT_MSG: ${{ github.event.pull_request.commits }}
         run: |
           export REPO_BASE=$PWD
           echo "${ALL_CHANGED_FILES}"
           echo "${COMMIT_MSG}"
-          git log
           python3 -u ./scripts/ci/static_check.py
