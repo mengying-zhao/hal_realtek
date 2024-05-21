@@ -12,6 +12,9 @@ jobs:
       steps:
       - name: Checkout the code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -26,18 +29,6 @@ jobs:
       - name: Get Changed Files
         id: changed-files
         uses: tj-actions/changed-files@v44
-      
-      - name: west setup
-        env:
-          BASE_REF: ${{ github.base_ref }}
-        run: |
-          git remote -v
-          # Ensure there's no merge commits in the PR
-          [[ "$(git rev-list --merges --count origin/${BASE_REF}..)" == "0" ]] || \
-          (echo "::error ::Merge commits not allowed, rebase instead";false)
-          git rebase origin/${BASE_REF}
-          # debug
-          git log  --pretty=oneline | head -n 10
 
       #- name: Download Astyle
       #  uses: carlosperate/download-file-action@v2
@@ -72,4 +63,10 @@ jobs:
           export REPO_BASE=$PWD
           echo "${ALL_CHANGED_FILES}"
           echo "${COMMIT_MSG}"
+          echo "========================="
+          echo "git log -1 HEAD --pretty='%s'"
+          echo "git log -1 HEAD --pretty='%b'"
+          echo "git log -1 HEAD --pretty='%B'"
+          echo "git log -1 HEAD --pretty='%H'"
+          echo "=========================="
           python3 -u ./scripts/ci/static_check.py
