@@ -60,5 +60,5 @@ jobs:
           export REPO_BASE=$PWD
           echo "${ALL_CHANGED_FILES}"
           echo "${COMMIT_MSG}"
-          git log -1 --pretty=format:"%s"
+          git log
           python3 -u ./scripts/ci/static_check.py
