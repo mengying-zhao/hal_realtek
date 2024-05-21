@@ -30,29 +30,29 @@ jobs:
         id: changed-files
         uses: tj-actions/changed-files@v44
 
-      #- name: Download Astyle
-      #  uses: carlosperate/download-file-action@v2
-      #  with:
-      #    file-url: 'https://sourceforge.net/projects/astyle/files/astyle/astyle%203.0/astyle_3.0_linux.tar.gz'
+      - name: Download Astyle
+        uses: carlosperate/download-file-action@v2
+        with:
+          file-url: 'https://sourceforge.net/projects/astyle/files/astyle/astyle%203.0/astyle_3.0_linux.tar.gz'
 
-      #- name: Build Astyle
-      #  run: |
-      #    tar -zxvf astyle_3.0_linux.tar.gz
-      #    cd astyle/build/gcc
-      #    sudo make
-      #    sudo make install
-      #    astyle --version
+      - name: Build Astyle
+        run: |
+          tar -zxvf astyle_3.0_linux.tar.gz
+          cd astyle/build/gcc
+          sudo make
+          sudo make install
+          astyle --version
 
-      #- name: Build Cppcheck
-      #  run: |
-      #    git clone https://github.com/danmar/cppcheck.git
-      #    cd cppcheck
-      #    git checkout 2.9
-      #    mkdir build
-      #    cd build
-      #    cmake ..
-      #    cmake --build .
-      #    ./bin/cppcheck --version
+      - name: Build Cppcheck
+        run: |
+          git clone https://github.com/danmar/cppcheck.git
+          cd cppcheck
+          git checkout 2.9
+          mkdir build
+          cd build
+          cmake ..
+          cmake --build .
+          ./bin/cppcheck --version
 
       - name: Run Static Check
         env:
