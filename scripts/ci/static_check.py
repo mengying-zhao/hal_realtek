@@ -84,6 +84,7 @@ class CICheck():
         for l in commit_body.split('\n'):
             if len(l) > 72:
                 return False, 'body line \'{}\' len {} not wrapped at 72 characters'.format(l, len(l))
+        return True, ""
 
     def check_file_encodeing(self, changed_file_list, file_dir=None):
         for f in changed_file_list:
