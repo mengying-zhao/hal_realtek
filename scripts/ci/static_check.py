@@ -9,7 +9,7 @@ import os
 import copy
 from pathlib import Path
 
-cppcheck = os.environ.get("CPPCHECK_PATH") or r"./cppcheck/build/bin/cppcheck"
+cppcheck = os.environ.get("CPPCHECK_PATH") or r'./cppcheck/build/bin/cppcheck'
 
 
 def git(*args, cwd=None, ignore_non_zero=False):
