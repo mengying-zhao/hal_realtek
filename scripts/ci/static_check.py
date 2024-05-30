@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright (c) 2018,2020 Intel Corporation
-# Copyright (c) 2022 Nordic Semiconductor ASA
-# SPDX-License-Identifier: Apache-2.0
+# Copyright(c) 2023, Realtek Semiconductor Corporation. All rights reserved.
 
 import sys
 import xml.dom.minidom
@@ -11,7 +9,7 @@ import os
 import copy
 from pathlib import Path
 
-cppcheck = os.environ.get("CPPCHECK_PATH") or r'./cppcheck/build/bin/cppcheck'
+cppcheck = os.environ.get("CPPCHECK_PATH") or r"./cppcheck/build/bin/cppcheck"
 
 
 def git(*args, cwd=None, ignore_non_zero=False):
