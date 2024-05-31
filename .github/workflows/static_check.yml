@@ -61,4 +61,4 @@ jobs:
         run: |
           export REPO_BASE=$PWD
           echo "${ALL_CHANGED_FILES}"
-          python3 -u ./scripts/ci/static_check.py
+          python3 -u scripts/ci/static_check.py
