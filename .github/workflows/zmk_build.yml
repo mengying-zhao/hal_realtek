@@ -90,7 +90,6 @@ jobs:
               echo "${manifest-rev}"
               echo "manifest_rev=$( git rev-parse manifest-rev )" >> $GITHUB_ENV
       
-      - name: checkout event triggered ref
         uses: actions/checkout@v4
         with:
             repository: ${{ github.repository }}
